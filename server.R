@@ -37,22 +37,23 @@ shinyServer(function(input, output) {
     
   palpites <- resultados %>%
     group_by(apostador) %>%
-    mutate(jogo_id = 1:n()) %>%
-    arrange(jogo_id, apostador) %>%
     select(`Palpiteiro` = apostador,
            `Data` = Date,
            `Time 1` = time1,
            `Gols Time 1` = gols_time1,
            `Gols Time 2` = gols_time2,
-           `Time 2` = time2)
+           `Time 2` = time2) %>%
+    arrange(`Palpiteiro`)
   
   output$palpites_table <- DT::renderDataTable(
     DT::datatable(palpites, options = list(pageLength = 16))
   )
   
   palpites_hoje <- palpites %>%
+    mutate(jogo_id = 1:n()) %>%
+    arrange(jogo_id, `Palpiteiro`) %>%
     filter(Data == as.Date(Sys.time())) %>%
-    select(-`Data`)
+    select(-`Data`, jogo_id)
   
   output$palpites_hoje_table <- DT::renderDataTable(
     DT::datatable(palpites_hoje, options = list(pageLength = 15))
