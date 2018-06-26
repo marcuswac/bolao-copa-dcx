@@ -15,9 +15,8 @@ shinyUI(fluidPage(
   # Application title
   titlePanel("Bolão da Copa @ DCX"),
   
-  navlistPanel(
-    "Menu",
-    tabPanel("Ranking",
+  navlistPanel("Menu",
+    tabPanel("Ranking da rodada",
              DT::dataTableOutput("pontuacao_table")
     ),
     tabPanel("Palpites de hoje",

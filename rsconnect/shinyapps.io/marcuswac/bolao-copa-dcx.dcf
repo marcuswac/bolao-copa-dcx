@@ -5,9 +5,9 @@ account: marcuswac
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 367272
-bundleId: 1448806
+bundleId: 1449795
 url: https://marcuswac.shinyapps.io/bolao-copa-dcx/
-when: 1529973762.4508
+when: 1530017878.15577
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: data/3a_rodada.txt|data/3a_rodada_pdf.txt|data/3<c2><aa> rodada.pdf|data/Tabela do Bola<cc><83>o DCX 2018.xlsx|data/~$Tabela do Bola<cc><83>o DCX 2018.xlsx
+ignoredFiles: README.md

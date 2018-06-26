@@ -32,41 +32,65 @@ shinyServer(function(input, output) {
     select(`Ranking`, 1:4)
   
   output$pontuacao_table <- DT::renderDataTable(
-    DT::datatable(pontuacao, rownames = FALSE, options = list(pageLength = 20), escape = FALSE)
+    DT::datatable(
+      pontuacao, rownames = FALSE, escape = FALSE, extensions = 'Buttons',
+      options = list(pageLength = 20, dom = 'Bfrtip',
+                     buttons = c('pageLength', 'copy', 'excel', 'pdf'),
+                     columnDefs = list(list(className = 'dt-center', targets = 2:4))
+                )
+      )
   )
     
   palpites <- resultados %>%
     group_by(apostador) %>%
+    mutate(x = "x") %>%
     select(`Palpiteiro` = apostador,
            `Data` = Date,
            `Time 1` = time1,
-           `Gols Time 1` = gols_time1,
-           `Gols Time 2` = gols_time2,
+           `G1` = gols_time1,
+           `x`,
+           `G2` = gols_time2,
            `Time 2` = time2) %>%
     arrange(`Palpiteiro`)
   
   output$palpites_table <- DT::renderDataTable(
-    DT::datatable(palpites, options = list(pageLength = 16))
+    DT::datatable(palpites, extensions = 'Buttons', rownames = FALSE,
+      options = list(pageLength = 16, lengthMenu = 16 * c(1, 4, 8, 12, 16, 20), dom = 'Bfrtip',
+                     buttons = c('pageLength', 'copy', 'excel', 'pdf'),
+                     columnDefs = list(list(className = 'dt-center', targets = 1:6))
+                )
+      )
   )
   
   palpites_hoje <- palpites %>%
     mutate(jogo_id = 1:n()) %>%
     arrange(jogo_id, `Palpiteiro`) %>%
     filter(Data == as.Date(Sys.time())) %>%
-    select(-`Data`, jogo_id)
+    select(-`Data`, -jogo_id)
   
   output$palpites_hoje_table <- DT::renderDataTable(
-    DT::datatable(palpites_hoje, options = list(pageLength = 15))
+    DT::datatable(palpites_hoje, extensions = 'Buttons', rownames = FALSE,
+                  options = list(pageLength = 15, lengthMenu = 15 * 1:4, dom = 'Bfrtip',
+                                 buttons = c('pageLength', 'copy', 'excel', 'pdf'),
+                                 columnDefs = list(list(className = 'dt-center', targets = 1:5))
+                            )
+                  )
   )
   
   resultados_copa <- resultados %>%
     filter(!is.na(Home.Score)) %>%
-    select(Data = Date, `Time 1` = time1, `Gols Time 1` = Home.Score,
-           `Gols Time 2` = Away.Score, `Time 2` = time2) %>%
+    mutate(x = "x") %>%
+    select(Data = Date, `Time 1` = time1, `G1` = Home.Score, x,
+           `G2` = Away.Score, `Time 2` = time2) %>%
     distinct() %>%
     arrange(desc(`Data`))
     
     output$resultados_copa_table <- DT::renderDataTable(
-      DT::datatable(resultados_copa, options = list(pageLength = 15))
+      DT::datatable(resultados_copa, extensions = 'Buttons', rownames = FALSE,
+                    options = list(dom = 'Bfrtip',
+                                   buttons = c('pageLength', 'copy', 'excel', 'pdf'),
+                                   columnDefs = list(list(className = 'dt-center', targets = 0:5))
+                              )
+                    )
     )
 })
