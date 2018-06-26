@@ -28,11 +28,11 @@ shinyServer(function(input, output) {
       `Acertos do vencedor ou empate` = sum(pontos == 1, na.rm = TRUE),
       `Total de pontos` = sum(pontos, na.rm = TRUE)) %>%
     arrange(desc(`Total de pontos`)) %>%
-    mutate(`Ranking` = dense_rank(desc(`Total de pontos`))) %>%
+    mutate(`Ranking` = paste0(dense_rank(desc(`Total de pontos`)), tags$sup("o"))) %>%
     select(`Ranking`, 1:4)
   
   output$pontuacao_table <- DT::renderDataTable(
-    DT::datatable(pontuacao, rownames = FALSE, options = list(pageLength = 20))
+    DT::datatable(pontuacao, rownames = FALSE, options = list(pageLength = 20), escape = FALSE)
   )
     
   palpites <- resultados %>%
