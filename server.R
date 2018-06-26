@@ -27,10 +27,12 @@ shinyServer(function(input, output) {
       `Acertos em cheio` = sum(pontos == 3, na.rm = TRUE),
       `Acertos do vencedor ou empate` = sum(pontos == 1, na.rm = TRUE),
       `Total de pontos` = sum(pontos, na.rm = TRUE)) %>%
-    arrange(desc(`Total de pontos`))
+    arrange(desc(`Total de pontos`)) %>%
+    mutate(`Ranking` = dense_rank(desc(`Total de pontos`))) %>%
+    select(`Ranking`, 1:4)
   
   output$pontuacao_table <- DT::renderDataTable(
-    DT::datatable(pontuacao, options = list(pageLength = 20))
+    DT::datatable(pontuacao, rownames = FALSE, options = list(pageLength = 20))
   )
     
   palpites <- resultados %>%
